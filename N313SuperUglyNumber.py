@@ -1,8 +1,15 @@
-def nthSuperUglyNumber(n, primes):
+import sys
+
+
+def method1(n, primes):
+    """
+    :type n: int
+    :type primes: List[int]
+    :rtype: int
+    """
     total_number_count = 1
     current_count = 1
     non_ugly_numbers = set()
-    ugly_numbers = {1}
     while total_number_count != n:
         current_count += 1
         is_non_ugly_number = False
@@ -19,8 +26,25 @@ def nthSuperUglyNumber(n, primes):
                     break
             if is_ugly_number:
                 total_number_count += 1
-                ugly_numbers.add(current_count)
             else:
                 non_ugly_numbers.add(current_count)
-    print(sorted(ugly_numbers))
     return current_count
+
+
+# O(k*n) k is len(primes)
+def method2(n, primes):
+    """
+    :type n: int
+    :type primes: List[int]
+    :rtype: int
+    """
+    ugly_list = [1] + [sys.maxsize] * (n - 1)
+    k = len(primes)
+    index = [0] * k
+    for i in range(1, n):
+        for j in range(k):
+            ugly_list[i] = min(ugly_list[i], primes[j] * ugly_list[index[j]])
+        for j in range(k):
+            if ugly_list[i] == (primes[j] * ugly_list[index[j]]):
+                index[j] += 1
+    return ugly_list[-1]
