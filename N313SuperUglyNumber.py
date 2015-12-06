@@ -2,7 +2,7 @@ def nthSuperUglyNumber(n, primes):
     total_number_count = 1
     current_count = 1
     non_ugly_numbers = set()
-    ugly_numbers = set([1])
+    ugly_numbers = {1}
     while total_number_count != n:
         current_count += 1
         is_non_ugly_number = False
