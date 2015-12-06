@@ -1,6 +1,3 @@
-import collections
-
-
 def nthSuperUglyNumber(n, primes):
     total_number_count = 1
     current_count = 1
