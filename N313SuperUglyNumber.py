@@ -42,9 +42,16 @@ def method2(n, primes):
     k = len(primes)
     index = [0] * k
     for i in range(1, n):
+        added_index = []
         for j in range(k):
-            ugly_list[i] = min(ugly_list[i], primes[j] * ugly_list[index[j]])
-        for j in range(k):
-            if ugly_list[i] == (primes[j] * ugly_list[index[j]]):
-                index[j] += 1
+            if primes[j] * ugly_list[index[j]] <= ugly_list[i]:
+                ugly_list[i] = primes[j] * ugly_list[index[j]]
+                added_index.append(j)
+            #ugly_list[i] = min(ugly_list[i], primes[j] * ugly_list[index[j]])
+        for ele in added_index:
+            if ugly_list[i] == (primes[ele] * ugly_list[index[ele]]):
+                index[ele] += 1
+        #for j in range(k):
+        #    if ugly_list[i] == (primes[j] * ugly_list[index[j]]):
+        #        index[j] += 1
     return ugly_list[-1]
