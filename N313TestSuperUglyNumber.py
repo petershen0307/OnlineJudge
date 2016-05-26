@@ -5,7 +5,7 @@ import N313SuperUglyNumber
 
 class TestCase(unittest.TestCase):
     def test_function(self):
-        methods = [N313SuperUglyNumber.method2]  # N313SuperUglyNumber.method1,
+        methods = [N313SuperUglyNumber.method3]  # N313SuperUglyNumber.method1,
         for method in methods:
             started = time.time()
             self.assertEqual(method(1, []), 1)
