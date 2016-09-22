@@ -27,9 +27,23 @@ func reverseListIterator(head *ListNode) *ListNode {
 	return reverseHead
 }
 
+func reverseListRecursive(head *ListNode) *ListNode {
+	if nil == head || nil == head.Next {
+		return head
+	}
+	reverseHead := reverseListRecursive(head.Next)
+	var tail *ListNode
+	for i := reverseHead; nil != i; i = i.Next {
+		tail = i
+	}
+	tail.Next = head
+	head.Next = nil
+	return reverseHead
+}
+
 func print(head *ListNode) {
 	for i := head; nil != i; i = i.Next {
-		fmt.Print(i, " ")
+		fmt.Print(*i, " ")
 	}
 	fmt.Println()
 }
@@ -40,5 +54,8 @@ func main() {
 	head.Next = &ListNode{Val: 2}
 	head.Next.Next = &ListNode{Val: 3}
 	print(head)
-	print(reverseListIterator(head))
+	head = reverseListIterator(head)
+	print(head)
+	head = reverseListRecursive(head)
+	print(head)
 }
