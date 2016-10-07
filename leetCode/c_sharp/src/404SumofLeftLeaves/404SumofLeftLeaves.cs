@@ -6,7 +6,7 @@ using System.Text;
 namespace LeetCode
 {
     // Definition for a binary tree node.
-    class TreeNode
+    public class TreeNode
     {
         public int val;
         public TreeNode left;
@@ -17,9 +17,8 @@ namespace LeetCode
         }
     }
 
-    class SumofLeftLeaves
+    public class SumofLeftLeaves
     {
-
         public static void Main()
         {
             TreeNode t0 = new TreeNode(0);
