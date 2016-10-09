@@ -1,5 +1,6 @@
 .vs/
 *.user
+*.exe
 
 # binary
 bin/
