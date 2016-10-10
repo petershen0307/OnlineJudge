@@ -10,8 +10,16 @@ namespace LeetCode
         static void Main()
         {
             _338CountingBits test = new _338CountingBits();
-            Console.WriteLine(test.CountBits(5));
+            PrintResult(test.CountBits(5));
+            Console.ReadKey();
         }
+
+        static void PrintResult(int[] result)
+        {
+            string[] stringResult = result.Select(x => x.ToString()).ToArray();
+            Console.WriteLine(String.Join(",", stringResult));
+        }
+
         // 指數 ~1 value 0 1
         // 指數1~2 value 2 3
         // 指數2~3 value 4 5 6 7
@@ -31,7 +39,7 @@ namespace LeetCode
                 int start = (1 << e);
                 for (int i = start; i <= end; i++)
                 {
-                    result[i] = result[i - start];
+                    result[i] = result[i - start] + 1;
                 }
             }
             return result;
