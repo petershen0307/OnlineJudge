@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "338CountingBits", "src\338C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "292NimGame", "src\292NimGame\292NimGame.csproj", "{27E6FA17-1B2C-4D1C-AC82-CA08E2D16735}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "136SingleNumber", "src\136SingleNumber\136SingleNumber.csproj", "{72EC4C7B-C291-4EBF-903B-CA963B797FAF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{27E6FA17-1B2C-4D1C-AC82-CA08E2D16735}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27E6FA17-1B2C-4D1C-AC82-CA08E2D16735}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27E6FA17-1B2C-4D1C-AC82-CA08E2D16735}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72EC4C7B-C291-4EBF-903B-CA963B797FAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72EC4C7B-C291-4EBF-903B-CA963B797FAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72EC4C7B-C291-4EBF-903B-CA963B797FAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72EC4C7B-C291-4EBF-903B-CA963B797FAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
