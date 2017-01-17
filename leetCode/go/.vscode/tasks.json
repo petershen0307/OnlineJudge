@@ -1,0 +1,25 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "0.1.0",
+    "command": "go",
+    "isShellCommand": true,
+    "showOutput": "silent",
+    "options": {
+        "env": {
+            "GOPATH": "C:\\Users\\PC\\Desktop\\code\\OnlineJudge\\leetCode\\go"
+        }
+    },
+    "tasks": [
+        {
+            "taskName": "install",
+            "args": [ "-v", "./..."],
+            "isBuildCommand": true
+        },
+        {
+            "taskName": "test",
+            "args": [ "-v", "./..."],
+            "isTestCommand": true
+        }
+    ]
+}
