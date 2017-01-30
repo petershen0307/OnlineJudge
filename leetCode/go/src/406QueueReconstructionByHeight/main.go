@@ -12,15 +12,34 @@ Note:
 The number of people is less than 1,100.
 */
 func reconstructQueue(people [][]int) [][]int {
+	greatThanByH := func(i, j *[]int) bool {
+		return (*i)[0] > (*j)[0]
+	}
+
+	lessThanByK := func(i, j *[]int) bool {
+		return (*i)[1] < (*j)[1]
+	}
+	By(lessThanByK).StableSort(people)
+	By(greatThanByH).StableSort(people)
+
 	var result [][]int
+	for i := 0; i < len(people); i++ {
+		// inser to result
+		fmt.Println(people, i)
+		temp := make([][]int, len(result)-people[i][1])
+		copy(temp, result[people[i][1]:len(result)])
+		result = append(result[:people[i][1]], people[i])
+		result = append(result, temp...)
+	}
+
 	return result
 }
 
 // By is the type of a "less" function that defines the ordering of its [][]int arguments.
 type By func(i, j *[]int) bool
 
-// Sort is a method on the function type, By, that sorts the argument slice according to the function.
-func (by By) Sort(queue [][]int) {
+// StableSort is a method on the function type, By, that sorts the argument slice according to the function.
+func (by By) StableSort(queue [][]int) {
 	qs := &QueueSorter{
 		queue: queue,
 		by:    by,
@@ -39,19 +58,8 @@ func (a *QueueSorter) Swap(i, j int)      { a.queue[i], a.queue[j] = a.queue[j],
 func (a *QueueSorter) Less(i, j int) bool { return a.by(&a.queue[i], &a.queue[j]) }
 
 func main() {
-	sortByH := func(i, j *[]int) bool {
-		return (*i)[0] < (*j)[0]
-	}
-
-	sortByK := func(i, j *[]int) bool {
-		return (*i)[1] < (*j)[1]
-	}
-
-	queue := [][]int{[]int{4, 2}, []int{1, 6}, []int{9, 77}, []int{3, 10}}
-
-	By(sortByH).Sort(queue)
-	fmt.Println(queue)
-
-	By(sortByK).Sort(queue)
-	fmt.Println(queue)
+	slices := [][]int{[]int{5, 0}, []int{7, 0}, []int{6, 1}, []int{5, 2}, []int{7, 1}, []int{4, 4}}
+	fmt.Println(slices)
+	slices = reconstructQueue(slices)
+	fmt.Println(slices)
 }
