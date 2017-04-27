@@ -15,3 +15,17 @@ func Test_canConstruct(t *testing.T) {
 		t.Error("Failed")
 	}
 }
+
+func Test_canConstructV2(t *testing.T) {
+	if b := canConstructV2("aa", "ab"); b != false {
+		t.Error("Failed")
+	}
+
+	if b := canConstructV2("aa", "aab"); b != true {
+		t.Error("Failed")
+	}
+
+	if b := canConstructV2("aaa", "aab"); b != false {
+		t.Error("Failed")
+	}
+}
