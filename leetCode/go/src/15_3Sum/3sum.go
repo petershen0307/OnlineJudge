@@ -1,24 +1,17 @@
 package sum3
 
 import (
-	"reflect"
+	"fmt"
 	"sort"
+	"strings"
 )
-
-func checkDuplicate(a [][]int, b []int) bool {
-	for _, v := range a {
-		if reflect.DeepEqual(v, b) {
-			return true
-		}
-	}
-	return false
-}
 
 func threeSum(nums []int) [][]int {
 	result := [][]int{}
 	if len(nums) < 3 {
 		return result
 	}
+	resultKey := make(map[string]int)
 	numMap := make(map[int]int)
 	for _, v := range nums {
 		numMap[v]++
@@ -34,8 +27,10 @@ func threeSum(nums []int) [][]int {
 				if _, ok := numMap[r]; ok {
 					temp := []int{i, j, r}
 					sort.Ints(temp)
-					if !checkDuplicate(result, temp) {
+					tempKey := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(temp)), ","), "[]")
+					if _, ok := resultKey[tempKey]; !ok {
 						result = append(result, temp)
+						resultKey[tempKey] = 1
 					}
 				}
 			} else if (r == i || r == j) && i != j {
@@ -43,16 +38,20 @@ func threeSum(nums []int) [][]int {
 				if scale, ok := numMap[r]; ok && 2 <= scale {
 					temp := []int{i, j, r}
 					sort.Ints(temp)
-					if !checkDuplicate(result, temp) {
+					tempKey := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(temp)), ","), "[]")
+					if _, ok := resultKey[tempKey]; !ok {
 						result = append(result, temp)
+						resultKey[tempKey] = 1
 					}
 				}
 			} else {
 				if scale, ok := numMap[r]; ok && 3 <= scale {
 					temp := []int{i, j, r}
 					sort.Ints(temp)
-					if !checkDuplicate(result, temp) {
+					tempKey := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(temp)), ","), "[]")
+					if _, ok := resultKey[tempKey]; !ok {
 						result = append(result, temp)
+						resultKey[tempKey] = 1
 					}
 				}
 			}
