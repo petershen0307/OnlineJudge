@@ -3,57 +3,39 @@ package sum3
 import (
 	"fmt"
 	"sort"
-	"strings"
 )
+
+func addOutput(result [][]int, resultMap map[string]int, a, b, c int) [][]int {
+	key := fmt.Sprintf("%d,%d,%d", a, b, c)
+	if _, ok := resultMap[key]; !ok {
+		result = append(result, []int{a, b, c})
+		resultMap[key] = 1
+	}
+	return result
+}
 
 func threeSum(nums []int) [][]int {
 	result := [][]int{}
+	resultMap := make(map[string]int)
 	if len(nums) < 3 {
 		return result
 	}
-	resultKey := make(map[string]int)
-	numMap := make(map[int]int)
-	for _, v := range nums {
-		numMap[v]++
-	}
-	for indexI, i := range nums {
-		for indexJ, j := range nums {
-			if indexI >= indexJ {
-				continue
-			}
-			r := -1 * (i + j)
-			if r != i && r != j {
-				// r is different with i and j
-				if _, ok := numMap[r]; ok {
-					temp := []int{i, j, r}
-					sort.Ints(temp)
-					tempKey := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(temp)), ","), "[]")
-					if _, ok := resultKey[tempKey]; !ok {
-						result = append(result, temp)
-						resultKey[tempKey] = 1
-					}
-				}
-			} else if (r == i || r == j) && i != j {
-				// r is equal i or j
-				if scale, ok := numMap[r]; ok && 2 <= scale {
-					temp := []int{i, j, r}
-					sort.Ints(temp)
-					tempKey := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(temp)), ","), "[]")
-					if _, ok := resultKey[tempKey]; !ok {
-						result = append(result, temp)
-						resultKey[tempKey] = 1
-					}
-				}
-			} else {
-				if scale, ok := numMap[r]; ok && 3 <= scale {
-					temp := []int{i, j, r}
-					sort.Ints(temp)
-					tempKey := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(temp)), ","), "[]")
-					if _, ok := resultKey[tempKey]; !ok {
-						result = append(result, temp)
-						resultKey[tempKey] = 1
-					}
-				}
+	sort.Ints(nums)
+	for i, a := range nums {
+		start := i + 1
+		end := len(nums) - 1
+		for start < end {
+			b := nums[start]
+			c := nums[end]
+			r := a + b + c
+			if 0 == r {
+				result = addOutput(result, resultMap, a, b, c)
+				start++
+				end--
+			} else if 0 > r {
+				start++
+			} else if 0 < r {
+				end--
 			}
 		}
 	}

@@ -18,7 +18,7 @@ func Test_threeSum(t *testing.T) {
 		{
 			name: "sample",
 			args: args{nums: []int{-1, 0, 1, 2, -1, -4}},
-			want: [][]int{[]int{-1, 0, 1}, []int{-1, -1, 2}},
+			want: [][]int{[]int{-1, -1, 2}, []int{-1, 0, 1}},
 		},
 		{
 			name: "test1",
