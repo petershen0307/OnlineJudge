@@ -61,3 +61,20 @@ func inorderTraversal(root *TreeNode) []int {
 	}
 	return inorder
 }
+
+import "container/list"
+func inorderTraversal2(root *TreeNode) []int {
+	stack := list.New()
+	traceResult := make([]int, 0)
+	for root != nil || stack.Len() != 0 {
+		for root != nil {
+			stack.PushBack(root)
+			root = root.Left
+		}
+		popNode := stack.Back()
+		root = stack.Remove(popNode).(*TreeNode)
+		traceResult = append(traceResult, root.Val)
+		root = root.Right
+	}
+	return traceResult
+}
