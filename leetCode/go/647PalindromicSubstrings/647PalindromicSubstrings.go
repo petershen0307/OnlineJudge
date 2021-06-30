@@ -1,3 +1,5 @@
+package palindromicsubstrings
+
 // O(N^3)
 func countSubstringsOn3(s string) int {
 	runes := []rune(s)
