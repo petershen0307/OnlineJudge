@@ -1,3 +1,7 @@
+package binarytreeinordertraversal
+
+import "container/list"
+
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -18,6 +22,12 @@
 	2.1 if right node is null, go the parent node
 	3. pop the node from stack and go to step 2 to check right node (we don't go to check left because we already traversed the left node)
 */
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
 func inorderTraversal(root *TreeNode) []int {
 	stack := make([]*TreeNode, 0)
 	inorder := make([]int, 0)
@@ -62,7 +72,6 @@ func inorderTraversal(root *TreeNode) []int {
 	return inorder
 }
 
-import "container/list"
 func inorderTraversal2(root *TreeNode) []int {
 	stack := list.New()
 	traceResult := make([]int, 0)
