@@ -36,3 +36,15 @@ func Test_1(t *testing.T) {
 		want: 16,
 	})
 }
+
+func Test_2(t *testing.T) {
+	run(t, testCase{
+		name: general.GetCallerName(),
+		args: args{
+			customers: []int{3},
+			grumpy:    []int{1},
+			minutes:   1,
+		},
+		want: 3,
+	})
+}
