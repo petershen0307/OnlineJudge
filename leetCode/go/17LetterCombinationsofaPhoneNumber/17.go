@@ -15,24 +15,24 @@ func letterCombinations(digits string) []string {
 		'9': []string{"w", "x", "y", "z"},
 	}
 	result := []string{}
-	for _, v0 := range digitKeyMap[rune(digits[0])] {
-		if len(digits) == 1 {
-			result = append(result, v0)
-		}
-		for i1 := 0; len(digits) > 1 && i1 < len(digitKeyMap[rune(digits[1])]); i1++ {
-			if len(digits) == 2 {
-				result = append(result, v0+digitKeyMap[rune(digits[1])][i1])
-			}
-			for i2 := 0; len(digits) > 2 && i2 < len(digitKeyMap[rune(digits[2])]); i2++ {
-				if len(digits) == 3 {
-					result = append(result, v0+digitKeyMap[rune(digits[1])][i1]+digitKeyMap[rune(digits[2])][i2])
-				}
-				for i3 := 0; len(digits) > 3 && i3 < len(digitKeyMap[rune(digits[3])]); i3++ {
-					result = append(result, v0+digitKeyMap[rune(digits[1])][i1]+digitKeyMap[rune(digits[2])][i2]+digitKeyMap[rune(digits[3])][i3])
+	combination(digitKeyMap, digits, &result)
+	return result
+}
 
-				}
+func combination(digitKeyMap map[rune][]string, digits string, result *[]string) {
+	if digits == "" {
+		return
+	}
+	combination(digitKeyMap, digits[0:len(digits)-1], result)
+	temp := []string{}
+	for _, v := range digitKeyMap[rune(digits[len(digits)-1])] {
+		if len(digits) == 1 {
+			temp = append(temp, v)
+		} else {
+			for _, r := range *result {
+				temp = append(temp, r+v)
 			}
 		}
 	}
-	return result
+	*result = temp
 }
