@@ -7,6 +7,7 @@ type node struct {
 
 type MinStack struct {
 	head *node
+	min  *node
 }
 
 func Constructor() MinStack {
@@ -18,9 +19,25 @@ func (this *MinStack) Push(val int) {
 	n.value = val
 	n.next = this.head
 	this.head = n
+	// track the current min value
+	// input: 1,2,3,1,2,3 then pop
+	// min stack: 1,1 we will store two 1 here
+	// when pop min stack, the input stack head should be the same with min stack head
+	if this.min == nil {
+		this.min = new(node)
+		this.min.value = val
+	} else if this.GetMin() >= val {
+		m := new(node)
+		m.next = this.min
+		m.value = val
+		this.min = m
+	}
 }
 
 func (this *MinStack) Pop() {
+	if this.head != nil && this.head.value == this.GetMin() {
+		this.min = this.min.next
+	}
 	this.head = this.head.next
 }
 
@@ -32,17 +49,10 @@ func (this *MinStack) Top() int {
 }
 
 func (this *MinStack) GetMin() int {
-	var min *int
-	for i := this.head; i != nil; i = i.next {
-		if min == nil {
-			min = new(int)
-			*min = i.value
-		}
-		if *min > i.value {
-			*min = i.value
-		}
+	if this.min != nil {
+		return this.min.value
 	}
-	return *min
+	return 0
 }
 
 /**
