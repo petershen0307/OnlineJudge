@@ -9,13 +9,15 @@ func rotate(nums []int, k int) {
 	if rotateNums == 0 {
 		return
 	}
-	temp := append(nums[length-rotateNums:], nums[0:length-rotateNums]...)
-	for i, v := range temp {
-		nums[i] = v
+	reverse(nums, 0, length-1)
+	reverse(nums, 0, rotateNums-1)
+	reverse(nums, rotateNums, length-1)
+}
+
+func reverse(nums []int, start, end int) {
+	for start < end {
+		nums[start], nums[end] = nums[end], nums[start]
+		start++
+		end--
 	}
-	// for i := 0; i != rotateNums; i++ {
-	// 	for j := length - 1; j > 0; j-- {
-	// 		nums[j-1], nums[j] = nums[j], nums[j-1]
-	// 	}
-	// }
 }
