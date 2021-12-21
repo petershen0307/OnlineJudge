@@ -14,3 +14,12 @@ func Test_ListGenerator(t *testing.T) {
 	assert.True(t, reflect.DeepEqual(source, actual))
 	assert.Equal(t, source, actual)
 }
+
+func Test_template(t *testing.T) {
+	// arrange
+	expect := 0
+	// act
+	actual := 1
+	// assert
+	assert.Equal(t, expect, actual)
+}
