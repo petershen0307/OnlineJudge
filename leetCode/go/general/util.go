@@ -35,3 +35,9 @@ func LinkedListToSlice(head *ListNode) []int {
 	}
 	return output
 }
+
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
