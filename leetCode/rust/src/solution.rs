@@ -5,3 +5,4 @@ pub mod s1920;
 pub mod s1480;
 pub mod s1689;
 pub mod s2011;
+pub mod s1672;
