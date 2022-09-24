@@ -7,3 +7,4 @@ pub mod s1689;
 pub mod s2011;
 pub mod s1672;
 pub mod s1470;
+pub mod s1476;
