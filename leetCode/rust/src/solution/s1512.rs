@@ -2,12 +2,12 @@ pub struct Solution;
 impl Solution {
     pub fn num_identical_pairs(nums: Vec<i32>) -> i32 {
         let mut good: i32 = 0;
-        for (i, v) in nums.iter().enumerate() {
-            for (j, v2) in nums.iter().enumerate() {
-                if v == v2 && i < j {
-                    good += 1;
-                }
+        let mut filter = [0; 101];
+        for v in nums {
+            if filter[v as usize] != 0 {
+                good += filter[v as usize];
             }
+            filter[v as usize] += 1;
         }
         return good;
     }
