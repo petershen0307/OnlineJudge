@@ -4,10 +4,7 @@ impl Solution {
         let mut result: u32 = 0;
         for i in 0..32 {
             if (x & (1 << i)) != 0 {
-                result = result | 1;
-            }
-            if i != 31 {
-                result = result << 1;
+                result = result | (1 << 31 - i);
             }
         }
         return result;
