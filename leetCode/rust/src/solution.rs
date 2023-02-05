@@ -13,3 +13,4 @@ pub mod s2114;
 pub mod s1512;
 pub mod s190;
 pub mod s2236;
+pub mod s2469;
