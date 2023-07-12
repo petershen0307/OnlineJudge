@@ -1,5 +1,3 @@
-use std::ops::Index;
-
 pub struct Solution;
 impl Solution {
     pub fn restore_string(s: String, indices: Vec<i32>) -> String {
