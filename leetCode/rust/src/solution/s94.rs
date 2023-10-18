@@ -22,10 +22,10 @@ use std::cell::RefCell;
 use std::rc::Rc;
 impl Solution {
     pub fn inorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
-        Self::bfs_recursive(root)
+        Self::dfs_recursive(root)
     }
 
-    fn bfs_recursive(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+    fn dfs_recursive(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
         let mut result: Vec<i32> = Vec::new();
         match root {
             None => return result,
@@ -43,39 +43,31 @@ impl Solution {
         result
     }
 
-    // fn dfs_iter(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
-    //     let mut result: Vec<i32> = Vec::new();
-    //     let mut current = match root {
-    //         Some(n) => n,
-    //         None => return result,
-    //     };
-    //     let mut stack = vec![Rc::clone(&current)];
+    fn dfs_iter(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        // https://www.geeksforgeeks.org/inorder-tree-traversal-without-recursion/
+        let mut result: Vec<i32> = Vec::new();
+        let mut current = match root.as_ref() {
+            Some(_) => root.clone(),
+            None => return result,
+        };
+        let mut stack = Vec::new();
 
-    //     while !stack.is_empty() {
-    //         let tmp = match &(*current).borrow().left {
-    //             Some(n) => {
-    //                 stack.push(Rc::clone(n));
-    //                 // go to left
-    //                 Rc::clone(n)
-    //             }
-    //             None => {
-    //                 // in-order put current value to result because current left is empty
-    //                 result.push((*current).borrow().val);
-    //                 stack.pop(); // because current already in the stack, pop it out
-    //                 match &(*current).borrow().right {
-    //                     Some(n) => Rc::clone(n),
-    //                     None => {
-    //                         if !stack.is_empty() {
-    //                             stack.pop().unwrap()
-    //                         } else {
-    //                             break;
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         };
-    //         current = tmp;
-    //     }
-    //     result
-    // }
+        while !stack.is_empty() || !current.is_none() {
+            current = match current.clone() {
+                // push current to stack then go to left
+                Some(node) => {
+                    stack.push(current.clone());
+                    (*node).borrow().left.clone()
+                }
+                // pop node from stack and print the result then go to right
+                None => {
+                    let node = stack.pop();
+                    let val = node.clone();
+                    result.push((*val.unwrap().unwrap()).borrow().val);
+                    (*node.unwrap().unwrap()).borrow().right.clone()
+                }
+            };
+        }
+        result
+    }
 }
