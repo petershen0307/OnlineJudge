@@ -47,6 +47,24 @@ impl Solution {
 
     fn dfs_iter(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
         let mut result = Vec::new();
+        let mut stack = Vec::new();
+        let mut current = root.clone();
+        while !stack.is_empty() || current.is_some() {
+            // print current val to result and go to left
+            current = match current.clone() {
+                Some(node) => {
+                    result.push(Rc::clone(&node).borrow().val);
+                    stack.push(current.clone());
+                    Rc::clone(&node).borrow().left.clone()
+                }
+                // if current is None, pop node from stack(get parent node) then go to right
+                None => {
+                    let node = stack.pop().unwrap();
+                    // the node pop from stack will not be None, because we didn't push None to stack
+                    Rc::clone(&node.unwrap()).borrow().right.clone()
+                }
+            }
+        }
         result
     }
 }
