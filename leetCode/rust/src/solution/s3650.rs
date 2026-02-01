@@ -1,74 +1,106 @@
 struct Solution;
 impl Solution {
-    pub fn _min_cost(n: i32, edges: Vec<Vec<i32>>) -> i32 {
-        /*
-        this method only find the way from 0 to n-1 not the minimum path
-        use `paths` to record every travel edge
-        if there is no edge for current node
-            1. try to reverse the edge
-            2. still no edge, go back the previous node
-        stop condition
-            1. find n-1 node
-            2. there is no edge for current node(which should be 0) and no previous node
-            3. edges is empty
-        */
+    pub fn min_cost(n: i32, edges: Vec<Vec<i32>>) -> i32 {
+        // https://leetcode.com/problems/minimum-cost-path-with-edge-reversals/solutions/7527912/it-is-just-a-simple-dijkstra-by-balepavl-wsxl/?envType=daily-question&envId=2026-01-27
+        // 根據提供的解法，我們可以直接將所有邊直接反轉存回 edges
+        // 會不會遇到同一個點走到兩個反轉邊呢? 不會，因為每個邊都為正數，走成迴圈就不會是最小路徑
         let mut edges = edges;
-        let mut paths: Vec<(i32, i32, i32)> = Vec::new(); // start, end, weight
-        let mut weight = 0;
-        let mut current_node = 0;
-        loop {
-            match Self::_find_edge(current_node, &edges) {
-                None => {
-                    // stop condition - paths is empty and current_node is 0 and no edge for current_node
-                    // stop condition - edges is empty
-                    if current_node == 0 && paths.is_empty() || edges.is_empty() {
-                        return -1;
-                    }
-                    // go back to previous node
-                    current_node = match paths.pop() {
-                        None => 0,
-                        Some(v) => {
-                            weight -= v.2;
-                            v.0
-                        }
-                    }
-                }
-                Some(r) => {
-                    let edge = edges.swap_remove(r.0);
-                    if r.1 {
-                        paths.push((edge[1], edge[0], 2 * edge[2]));
-                    } else {
-                        paths.push((edge[0], edge[1], edge[2]));
-                    }
-                    weight += paths.last().unwrap().2;
-                    current_node = paths.last().unwrap().1;
-                }
-            }
-            // stop condition - found n-1
-            if current_node == n - 1 {
-                break;
-            }
+        for edge in edges.clone() {
+            edges.push(vec![
+                edge[1],
+                edge[0],
+                edge[2].checked_mul(2).unwrap_or(i32::MAX),
+            ]);
         }
-        weight
+        // go Dijkstra algorithm
+        Self::dijkstra(0, n - 1, &edges)
     }
 
-    // return the edge index, edge is reversed
-    fn _find_edge(n: i32, edges: &[Vec<i32>]) -> Option<(usize, bool)> {
-        // find direct edge with first match
-        for (index, edge) in edges.iter().enumerate() {
-            if n == edge[0] {
-                return Some((index, false));
+    fn dijkstra(start: i32, target: i32, edges: &[Vec<i32>]) -> i32 {
+        use std::collections::BinaryHeap;
+        // 使用 min heap 來幫助每次取得最短路徑的 node
+        // min heap 存的結構是(n, weight) 到達點(n) 所需要的 weight
+        // node_records 紀錄點是否有走過與到該點的最短 weight
+        // 1. 先將起始點放入 min heap (0, 0)
+        // 2. loop 結束條件 當 min heap 為空時
+        // 2.1 從 min heap 取出一個點(n)，標註點 n 已經走訪過
+        // 2.2 把該點(n)連接的點(a,b)都取出
+        // 2.3 若點a, b都沒有走訪過，則都放入 min heap，a.weight = n.weight+w(n,a)，若走訪過則跳過處理
+        // w(n,a) => 從 n 走到 a 需要的 weight
+        // n.weight => 從起始點走到 n 的最小 weight
+        #[derive(Clone, Eq)]
+        struct NodeWeight {
+            node: i32,
+            weight_from_start_node: i32,
+        }
+        impl Ord for NodeWeight {
+            fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+                self.weight_from_start_node
+                    .cmp(&(other.weight_from_start_node))
             }
         }
-        // find possible reverse edge
-        for (index, edge) in edges.iter().enumerate() {
-            if n == edge[1] {
-                return Some((index, true));
+        impl PartialOrd for NodeWeight {
+            fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+                Some(self.cmp(other))
             }
         }
-        None
+
+        impl PartialEq for NodeWeight {
+            fn eq(&self, other: &Self) -> bool {
+                self.node == other.node
+            }
+        }
+        #[derive(Clone)]
+        struct NodeRecord {
+            is_visited: bool,
+            weight: i32,
+        }
+        let mut min_heap = BinaryHeap::new();
+        min_heap.push(std::cmp::Reverse(NodeWeight {
+            node: start,
+            weight_from_start_node: 0,
+        }));
+        let mut node_records = vec![
+            NodeRecord {
+                is_visited: false,
+                weight: i32::MAX,
+            };
+            (target + 1) as usize
+        ];
+        while !min_heap.is_empty() {
+            let node = match min_heap.pop() {
+                Some(n) => n.0,
+                None => continue,
+            };
+            // skip the visited node here for more efficient
+            if node_records[node.node as usize].is_visited {
+                continue;
+            }
+            node_records[node.node as usize].is_visited = true;
+            if node_records[node.node as usize].weight > node.weight_from_start_node {
+                node_records[node.node as usize].weight = node.weight_from_start_node;
+            }
+            // find related node in edges
+            for edge in edges {
+                if edge[0] == node.node {
+                    if node_records[edge[1] as usize].is_visited {
+                        // the node is visited, so skip
+                        continue;
+                    }
+                    min_heap.push(std::cmp::Reverse(NodeWeight {
+                        node: edge[1],
+                        weight_from_start_node: node.weight_from_start_node + edge[2],
+                    }));
+                }
+            }
+        }
+        if !node_records[target as usize].is_visited {
+            return -1;
+        }
+        node_records[target as usize].weight
     }
 }
+
 #[test]
 fn test_1() {
     let input_n = 4;
