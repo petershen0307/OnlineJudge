@@ -4,19 +4,20 @@ impl Solution {
         // https://leetcode.com/problems/minimum-cost-path-with-edge-reversals/solutions/7527912/it-is-just-a-simple-dijkstra-by-balepavl-wsxl/?envType=daily-question&envId=2026-01-27
         // 根據提供的解法，我們可以直接將所有邊直接反轉存回 edges
         // 會不會遇到同一個點走到兩個反轉邊呢? 不會，因為每個邊都為正數，走成迴圈就不會是最小路徑
-        let mut edges = edges;
-        for edge in edges.clone() {
-            edges.push(vec![
-                edge[1],
-                edge[0],
-                edge[2].checked_mul(2).unwrap_or(i32::MAX),
-            ]);
+        // 利用 vec random access 加快查找速度
+        let mut new_edges: Vec<Vec<(i32, i32)>> = vec![Vec::new(); n as usize]; // index: start_node, value (end_node, edge_weight)
+        for edge in edges {
+            // push original
+            new_edges[edge[0] as usize].push((edge[1], edge[2]));
+            // push reverse
+            new_edges[edge[1] as usize].push((edge[0], edge[2].checked_mul(2).unwrap_or(i32::MAX)));
         }
         // go Dijkstra algorithm
-        Self::dijkstra(0, n - 1, &edges)
+        Self::dijkstra(0, n - 1, &new_edges)
     }
 
-    fn dijkstra(start: i32, target: i32, edges: &[Vec<i32>]) -> i32 {
+    // the edges structure definition index: start_node, value (end_node, edge_weight)
+    fn dijkstra(start: i32, target: i32, edges: &[Vec<(i32, i32)>]) -> i32 {
         use std::collections::BinaryHeap;
         // 使用 min heap 來幫助每次取得最短路徑的 node
         // min heap 存的結構是(n, weight) 到達點(n) 所需要的 weight
@@ -81,17 +82,15 @@ impl Solution {
                 node_records[node.node as usize].weight = node.weight_from_start_node;
             }
             // find related node in edges
-            for edge in edges {
-                if edge[0] == node.node {
-                    if node_records[edge[1] as usize].is_visited {
-                        // the node is visited, so skip
-                        continue;
-                    }
-                    min_heap.push(std::cmp::Reverse(NodeWeight {
-                        node: edge[1],
-                        weight_from_start_node: node.weight_from_start_node + edge[2],
-                    }));
+            for edge in edges[node.node as usize].clone() {
+                if node_records[edge.0 as usize].is_visited {
+                    // the node is visited, so skip
+                    continue;
                 }
+                min_heap.push(std::cmp::Reverse(NodeWeight {
+                    node: edge.0,
+                    weight_from_start_node: node.weight_from_start_node + edge.1,
+                }));
             }
         }
         if !node_records[target as usize].is_visited {
