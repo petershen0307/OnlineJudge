@@ -1,5 +1,7 @@
 package solution
 
+import "container/heap"
+
 func calcEquation(equations [][]string, values []float64, queries [][]string) []float64 {
 	/*
 		把 equations 當作點與邊
@@ -64,14 +66,15 @@ func dijkstra(start, end string, edges map[string]map[string]float64) float64 {
 			weightFromStart: 1.0,
 		},
 	}
-	heap := minHeap{
+	h := minHeap{
 		{
 			name:            start,
 			weightFromStart: 1.0,
 		},
 	}
-	for heap.Len() != 0 {
-		n := heap.Pop().(node)
+	heap.Init(&h)
+	for h.Len() != 0 {
+		n := heap.Pop(&h).(node)
 		// 因為是 min heap 所以拿出來的是路徑最短的點, 若該點已經造訪過, 則表示當前的權重已經不是最小, 略過這次執行, 沒有造訪過才執行
 		if v, ok := nodeRecords[n.name]; ok && v.isVisited {
 			continue
@@ -98,7 +101,7 @@ func dijkstra(start, end string, edges map[string]map[string]float64) float64 {
 				// 無 e 點紀錄，更新權重
 				nodeRecords[e] = eNode
 			}
-			heap.Push(eNode)
+			heap.Push(&h, eNode)
 		}
 	}
 	if v, ok := nodeRecords[end]; ok && v.isVisited {
